@@ -3,7 +3,7 @@
 
 #include "tensor.h"
 
-/* tsralloc: allocate new tensor on heap.
+/* tsralloc: allocate new zero-initialized tensor on heap.
  * It returns NULL if malloc(3) fails and nrows/ncols is zero, otherwise it
  * returns pointer to new allocated tensor. */
 tensor_t *
@@ -21,7 +21,7 @@ tsralloc(size_t nrows, size_t ncols)
         return NULL;
     }
 
-    double *data = malloc(nrows * ncols * sizeof *data);
+    double *data = calloc(nrows * ncols, sizeof *data);
     if(data == NULL) {
         errno = ENOMEM;
         return NULL;
