@@ -10,10 +10,15 @@ main(int argc, char **argv)
     /* test tensor allocation */
     size_t nrows = 2;
     size_t ncols = 3;
+
     tensor_t *tensor = tsralloc(nrows, ncols);
     assert(tensor != NULL);
     assert(tsrnrows(*tensor) == nrows);
     assert(tsrncols(*tensor) == ncols);
+
+    tensor_t *teno = tsralloc(0, 0);
+    assert(teno == NULL);
+    assert(errno == EINVAL);
 
     /* test set & get */
     int err = 0;
