@@ -1,3 +1,0 @@
-[submodule "deps/pcg-c"]
-	path = deps/pcg-c
-	url = https://github.com/imneme/pcg-c.git
