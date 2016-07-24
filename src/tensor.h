@@ -1,3 +1,14 @@
+/* tensor - A memory-efficient data structure for handling numeric data
+ * The tensor store the mutimensional arrays in row-major order, it means
+ * consecutive elements of the rows of the array are contiguous in
+ * memory.
+ *
+ * Accessing array elements that are contiguous in memory are faster than
+ * accessing elements which are not, due to cache in memory.
+ *
+ * Copyright (c) 2016, Bayu Aldi Yansyah. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that
+ * can be found in the LICENSE file. */
 #ifndef SIMPLE_NN_TENSOR_H
 #define SIMPLE_NN_TENSOR_H
 
@@ -9,7 +20,6 @@ struct tensor {
 typedef struct tensor tensor_t;
 
 tensor_t *tensor_allocate(size_t nrows, size_t ncols);
-tensor_t *tensor_allocate_random(size_t nrows, size_t ncols);
 
 void tensor_free(tensor_t *tensor);
 
