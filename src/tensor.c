@@ -14,10 +14,10 @@
 
 #include "tensor.h"
 
-/* tensor_allocate: allocate new zero-initialized tensor on heap.
+/* allocate_tensor: allocate new zero-initialized tensor on heap.
  * It returns NULL if alocation fails or nrows/ncols is zero
  * It returns pointer to new allocated tensor_t if operation success */
-tensor_t *tensor_allocate(size_t nrows, size_t ncols)
+tensor_t *allocate_tensor(size_t nrows, size_t ncols)
 {
     /* check the value of nrows and ncols */
     if(nrows == 0 || ncols == 0) {
@@ -43,8 +43,8 @@ tensor_t *tensor_allocate(size_t nrows, size_t ncols)
     return tensor;
 }
 
-/* tensor_free: free tensor t from heap */
-void tensor_free(tensor_t *t)
+/* free_tensor: free tensor t from heap */
+void free_tensor(tensor_t *t)
 {
     free(t->data);
     free(t);
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     int err = 0;
 
     /* test tensor allocation */
-    tensor_t *tensor = tensor_allocate(nrows, ncols);
+    tensor_t *tensor = allocate_tensor(nrows, ncols);
     assert(tensor != NULL);
     assert(tensor_get_nrows(*tensor) == nrows);
     assert(tensor_get_ncols(*tensor) == ncols);
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
     }
 
     /* it returns NULL if nrows=ncols=0 */
-    tensor_t *teno = tensor_allocate(0, 0);
+    tensor_t *teno = allocate_tensor(0, 0);
     assert(teno == NULL);
     assert(errno == EINVAL);
 
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
     assert(errno == EINVAL);
 
     /* test free; checked by valgrind */
-    tensor_free(tensor);
+    free_tensor(tensor);
 }
 #endif
 
