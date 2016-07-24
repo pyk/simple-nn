@@ -1,3 +1,9 @@
+/* rng (random number generator)
+ * A module to generate random number from various distributions
+ *
+ * Copyright (c) 2016, Bayu Aldi Yansyah. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be found
+ * in the LICENSE file. */
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
@@ -7,7 +13,16 @@
 
 #include "rng.h"
 
-rng_t *allocate_rng(rng_dist_t rngd)
+/* allocate_rng: Allocate new random number generator from distribution
+ * dist to the heap.
+ *
+ * Possible dist value are:
+ * RNG_UNIFORM for uniform distribution
+ * RNG_NORMAL or RNG_GAUSSIAN for normal(gaussian) distribution
+ *
+ * It returns NULL if the malloc(3) fails and set the errno to ENOMEM.
+ * It returns pointer to new allocated rng_t if success. */
+rng_t *allocate_rng(rng_dist_t dist)
 {
     rng_t *rng = malloc(sizeof *rng);
     if(rng == NULL) {
@@ -30,18 +45,27 @@ rng_t *allocate_rng(rng_dist_t rngd)
     rng->pcg_rng = pcg_rng;
     rng->pcg_initial_state = initial_state;
     rng->pcg_seed_value = seed_value;
-    rng->distribution = rngd;
+    rng->distribution = dist;
 
     return rng;
 }
 
+/* free_rng: Free random number generator rng from the heap.
+ * It does nothing if rng is NULL */
 void free_rng(rng_t *rng)
 {
+    if(rng == NULL) return;
     /* free the heap */
     free(rng->pcg_rng);
     free(rng);
 }
 
+/* set_seed_value_rng: Set the seed value of random number generator rng.
+ * By default the seed value is an integer value of the memory address of
+ * the rng pointer itself. This function will change the default one.
+ *
+ * It returns non-zero value if rng is NULL otherwise it returns zero.
+ * */
 int set_seed_value_rng(rng_t *rng, uint64_t seed_value)
 {
     if(rng == NULL) {
@@ -53,6 +77,12 @@ int set_seed_value_rng(rng_t *rng, uint64_t seed_value)
     return 0;
 }
 
+/* get_random_value_rng: Get the next random number from random number
+ * generator rng and write the result to the output.
+ *
+ * It returns non-zero value if rng is NULL
+ * It returns zero if the operation success, the random number will be
+ * written into output */
 int get_random_value_rng(rng_t *rng, double *output)
 {
     if(rng == NULL) {
@@ -66,9 +96,11 @@ int get_random_value_rng(rng_t *rng, double *output)
         *output = value;
         return 0;
     }
+
     return -1;
 }
 
+/* Test suite for this module */
 #ifdef SIMPLE_NN_RNG_C_TEST
 #include <assert.h>
 

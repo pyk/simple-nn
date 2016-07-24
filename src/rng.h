@@ -1,11 +1,14 @@
-// TODO: change tensor_generator to rng (random number generator)
-// RNG: Random Number Generator
+/* rng (random number generator)
+ * A module to generate random number from various distributions
+ *
+ * Copyright (c) 2016, Bayu Aldi Yansyah. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be found
+ * in the LICENSE file. */
 #ifndef SIMPLE_NN_RNG_H
 #define SIMPLE_NN_RNG_H
 
 #include <pcg_variants.h>
 
-// ENUM: RNG_UNIFORM, RNG_NORMAL
 enum rng_distribution {
     RNG_UNIFORM,
     RNG_NORMAL,
