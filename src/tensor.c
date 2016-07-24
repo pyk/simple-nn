@@ -1,3 +1,14 @@
+/* tensor - A memory-efficient data structure for handling numeric data
+ * The tensor store the mutimensional arrays in row-major order, it means
+ * consecutive elements of the rows of the array are contiguous in
+ * memory.
+ *
+ * Accessing array elements that are contiguous in memory are faster than
+ * accessing elements which are not, due to cache in memory.
+ *
+ * Copyright (c) 2016, Bayu Aldi Yansyah. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that
+ * can be found in the LICENSE file. */
 #include <stdlib.h>
 #include <errno.h>
 
@@ -74,6 +85,12 @@ int tensor_get_value(const tensor_t t, size_t rowi, size_t colj, double *output)
  * Otherwise it returns a non-zero value and set errno to EINVAL */
 int tensor_set_value(tensor_t *const t, size_t rowi, size_t colj, double value)
 {
+    /* NULL checking */
+    if(t == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+
     /* bound checking */
     if(rowi >= t->nrows || colj >= t->ncols) {
         errno = EINVAL;
@@ -125,6 +142,11 @@ int main(int argc, char **argv)
     err = tensor_get_value(*tensor, 0, 0, &output);
     assert(err == 0);
     assert(output == input);
+
+    /* setting NULL value should be error */
+    err = tensor_set_value(NULL, 0, 0, input);
+    assert(err != 0);
+    assert(errno == EINVAL);
 
     /* it returns non-zero value if the user trying to access or set
      * the index that equal or larger than number of rows and columns */

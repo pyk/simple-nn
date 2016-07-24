@@ -9,6 +9,7 @@ struct tensor {
 typedef struct tensor tensor_t;
 
 tensor_t *tensor_allocate(size_t nrows, size_t ncols);
+tensor_t *tensor_allocate_random(size_t nrows, size_t ncols);
 
 void tensor_free(tensor_t *tensor);
 
