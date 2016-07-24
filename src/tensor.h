@@ -1,5 +1,5 @@
 /* tensor - A memory-efficient data structure for handling numeric data
- * The tensor store the mutimensional arrays in row-major order, it means
+ * The tensor stores the mutimensional arrays in row-major order, it means
  * consecutive elements of the rows of the array are contiguous in
  * memory.
  *
