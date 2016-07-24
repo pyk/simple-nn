@@ -60,13 +60,13 @@ void free_rng(rng_t *rng)
     free(rng);
 }
 
-/* set_seed_value_rng: Set the seed value of random number generator rng.
+/* rng_set_seed_value: Set the seed value of random number generator rng.
  * By default the seed value is an integer value of the memory address of
  * the rng pointer itself. This function will change the default one.
  *
  * It returns non-zero value if rng is NULL otherwise it returns zero.
  * */
-int set_seed_value_rng(rng_t *rng, uint64_t seed_value)
+int rng_set_seed_value(rng_t *rng, uint64_t seed_value)
 {
     if(rng == NULL) {
         errno = EINVAL;
@@ -77,25 +77,27 @@ int set_seed_value_rng(rng_t *rng, uint64_t seed_value)
     return 0;
 }
 
-/* get_random_value_rng: Get the next random number from random number
+/* rng_get_random_value: Get the next random number from random number
  * generator rng and write the result to the output.
  *
- * It returns non-zero value if rng is NULL
+ * It returns non-zero value if output is NULL
  * It returns zero if the operation success, the random number will be
  * written into output */
-int get_random_value_rng(rng_t *rng, double *output)
+int rng_get_random_value(rng_t rng, double *output)
 {
-    if(rng == NULL) {
+    if(output == NULL) {
         errno = EINVAL;
         return -1;
     }
 
-    if(rng->distribution == RNG_UNIFORM) {
-        uint32_t random_number = pcg32_random_r(rng->pcg_rng);
+    if(rng.distribution == RNG_UNIFORM) {
+        uint32_t random_number = pcg32_random_r(rng.pcg_rng);
         double value = ldexp(random_number, -32);
         *output = value;
         return 0;
     }
+
+    /* TODO(pyk): implement NORMAL or GAUSSIAN distribution */
 
     return -1;
 }
@@ -112,18 +114,18 @@ int main(int argc, char **argv)
     rng_t *rng = allocate_rng(RNG_UNIFORM);
 
     /* Set the seed value */
-    err = set_seed_value_rng(rng, 123);
+    err = rng_set_seed_value(rng, 123);
     assert(err == 0);
-    err = set_seed_value_rng(NULL, 123);
+    err = rng_set_seed_value(NULL, 123);
     assert(err != 0);
     assert(errno == EINVAL);
 
     /* Get random value */
     double output1, output2;
-    err = get_random_value_rng(rng, &output1);
-    err = get_random_value_rng(rng, &output2);
+    err = rng_get_random_value(*rng, &output1);
+    err = rng_get_random_value(*rng, &output2);
     assert(output1 != output2);
-    err = get_random_value_rng(NULL, &output1);
+    err = rng_get_random_value(*rng, NULL);
     assert(err != 0);
     assert(errno == EINVAL);
 
