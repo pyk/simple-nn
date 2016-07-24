@@ -13,6 +13,7 @@
 #include <errno.h>
 
 #include "tensor.h"
+#include "rng.h"
 
 /* allocate_tensor: allocate new zero-initialized tensor on heap.
  * It returns NULL if alocation fails or nrows/ncols is zero
@@ -43,7 +44,64 @@ tensor_t *allocate_tensor(size_t nrows, size_t ncols)
     return tensor;
 }
 
-/* free_tensor: free tensor t from heap */
+/* allocate_random_tensor: Allocate random-number-initialized tensor
+ * on the heap.
+ * The distribution of where the random number generated from is specified
+ * by random number generator rng.
+ *
+ * It returns NULL if allocation fails or nrows/ncols is zero.
+ * It returns pointer to new allocated tensor_t if operation succeed.
+ *
+ * The returns value should be checked by the caller and perform error
+ * handling */
+tensor_t *allocate_random_tensor(size_t nrows, size_t ncols, const rng_t rng)
+{
+    /* check the value of nrows and ncols */
+    if(nrows == 0 || ncols == 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    tensor_t *tensor = malloc(sizeof *tensor);
+    if(tensor == NULL) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    double *data = malloc((nrows * ncols) * sizeof *data);
+    if(data == NULL) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    tensor->nrows = nrows;
+    tensor->ncols = ncols;
+    tensor->data = data;
+
+    /* populate the data */
+    for(int i = 0; i < nrows; i++) {
+        for(int j = 0; j < ncols; i++) {
+            int err = 0;
+
+            double rand_value;
+            err = rng_get_random_value(rng, &rand_value);
+            if(err != 0) {
+                errno = errno;
+                return NULL;
+            }
+
+            err = tensor_set_value(tensor, i, j, rand_value);
+            if(err != 0) {
+                errno = errno;
+                return NULL;
+            }
+        }
+    }
+
+    return tensor;
+}
+
+/* free_tensor: free tensor t from the heap */
 void free_tensor(tensor_t *t)
 {
     free(t->data);
@@ -79,10 +137,12 @@ int tensor_get_value(const tensor_t t, size_t rowi, size_t colj, double *output)
     return 0;
 }
 
-/* tensor_set_value: set the value of tensor cell from tensor t specified by row
- * index rowi dan column index colj.
- * It returns 0 and set the value of corresponding tensor cell if input is valid
- * Otherwise it returns a non-zero value and set errno to EINVAL */
+/* tensor_set_value: Set the value of element tensor t.
+ * The index of element is started from zero.
+ *
+ * It returns zero value if operation succeed
+ * It returns non-zero value if t is NULL or trying to set the value of element
+ * tensor t that doesn't exists */
 int tensor_set_value(tensor_t *const t, size_t rowi, size_t colj, double value)
 {
     /* NULL checking */

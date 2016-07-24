@@ -12,6 +12,8 @@
 #ifndef SIMPLE_NN_TENSOR_H
 #define SIMPLE_NN_TENSOR_H
 
+#include "rng.h"
+
 struct tensor {
     size_t nrows;
     size_t ncols;
@@ -20,6 +22,7 @@ struct tensor {
 typedef struct tensor tensor_t;
 
 tensor_t *allocate_tensor(size_t nrows, size_t ncols);
+tensor_t *allocate_random_tensor(size_t nrows, size_t ncols, rng_t rng);
 
 void free_tensor(tensor_t *tensor);
 
@@ -28,6 +31,5 @@ size_t tensor_get_ncols(const tensor_t tensor);
 
 int tensor_set_value(tensor_t *const t, size_t rowi, size_t colj, double value);
 int tensor_get_value(const tensor_t t, size_t rowi, size_t colj, double *output);
-
 
 #endif
