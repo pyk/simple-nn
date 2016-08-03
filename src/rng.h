@@ -28,7 +28,7 @@ rng_t *allocate_rng(rng_dist_t rngd);
 
 void free_rng(rng_t *rng);
 
-int rng_set_random_seed(rng_t *rng, uint64_t seed_value);
+int rng_set_seed_value(rng_t *rng, uint64_t seed_value);
 int rng_get_random_value(rng_t rng, double *output);
 
 #endif
