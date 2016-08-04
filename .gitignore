@@ -1,3 +1,4 @@
 bin/
 *.zip
 src/*.o
+src/*_test
