@@ -1,4 +1,5 @@
-# List of make(1) rules to generate objects and binary
+# Makefile to build the src objects and test the module
+
 CFLAGS=-std=c99 -pedantic -Werror -Wall
 INCLUDE_DIR=-I../deps/pcg/include
 LIBRARY_DIR=-L../deps/pcg/src

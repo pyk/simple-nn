@@ -1,4 +1,7 @@
-CFLAGS=-std=c99 -pedantic -Werror -Wall
+# Makefile for the simple-nn project
+# Run
+# % make
+# % make test
 
 default: deps
 .PHONY: default

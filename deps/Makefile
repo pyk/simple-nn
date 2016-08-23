@@ -1,4 +1,4 @@
-# Makefile for building the dependencies
+# Makefile to build  the dependencies
 
 all: deps/pcg/src/libpcg_random.a
 
