@@ -2,7 +2,6 @@ language: c
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq valgrind
-    - sudo apt-get install build-essential
 install: make
 script: make test
 compiler:
