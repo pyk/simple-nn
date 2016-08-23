@@ -1,4 +1,4 @@
-CFLAGS=-std=c99 -Wpedantic -Werror -Wall
+CFLAGS=-std=c99 -pedantic -Werror -Wall
 
 default: deps
 .PHONY: default

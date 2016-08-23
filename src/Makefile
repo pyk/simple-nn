@@ -1,5 +1,5 @@
 # List of make(1) rules to generate objects and binary
-CFLAGS=-std=c99 -Wpedantic -Werror -Wall
+CFLAGS=-std=c99 -pedantic -Werror -Wall
 INCLUDE_DIR=-I../deps/pcg/include
 LIBRARY_DIR=-L../deps/pcg/src
 
