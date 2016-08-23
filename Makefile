@@ -1,13 +1,17 @@
 CFLAGS=-std=c99 -Wpedantic -Werror -Wall
 
-# Build the binary
-bin/simple-nn: src/main.c object/tensor.o
-	$(CC) $(CFLAGS) src/main.c object/tensor.o -o bin/simple-nn
+default:
+	@echo "Nothing happen yet"
 
 # Test module
-test:
-	cd src; $(MAKE) rng_test
-	valgrind -q --track-origins=yes --leak-check=yes ./src/rng_test
-	cd src; $(MAKE) tensor_test
-	valgrind -q --track-origins=yes --leak-check=yes ./src/tensor_test
+test: test-rng test-tensor
 
+test-rng:
+	$(MAKE) rng_test --directory=src/
+	valgrind -q --track-origins=yes --leak-check=yes ./src/rng_test
+.PHONY: test-rng
+
+test-tensor:
+	$(MAKE) tensor_test --directory=src/
+	valgrind -q --track-origins=yes --leak-check=yes ./src/tensor_test
+.PHONY: test-tensor
